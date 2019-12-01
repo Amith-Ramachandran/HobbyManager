@@ -1,6 +1,7 @@
 import express, { Application } from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import ConnectionManger from './db/ConnectionManager';
 
 class App {
     public app: Application;
@@ -8,6 +9,7 @@ class App {
     constructor() {
         this.app = express();
         this.__setConfig();
+        this.__connectDB();
     }
 
     private __setConfig(): void {
@@ -20,6 +22,10 @@ class App {
             res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
             next();
         });
+    }
+
+    private __connectDB(): void {
+        new ConnectionManger();
     }
 }
 

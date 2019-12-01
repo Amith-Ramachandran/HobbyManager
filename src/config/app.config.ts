@@ -14,6 +14,23 @@ const config = convict({
         default: 8000,
         env: 'PORT',
     },
+    database: {
+        host: {
+            doc: 'DB Host',
+            default: 'localhost',
+            env: 'DB_HOST',
+        },
+        port: {
+            doc: 'DB Port',
+            default: '27017',
+            env: 'DB_PORT',
+        },
+        dbname: {
+            doc: 'DB name',
+            default: '',
+            env: 'DB_NAME',
+        },
+    },
 });
 
 config.validate({ allowed: 'strict' });
