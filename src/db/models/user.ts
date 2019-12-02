@@ -21,7 +21,7 @@ UserSchema.set('toJSON', {
 
 export interface UserModel extends mongoose.Document {
     name: string;
-    hobby: HobbyModel[];
+    hobby: [mongoose.Schema.Types.ObjectId];
 }
 
 export const User = mongoose.model<UserModel>('User', UserSchema);
