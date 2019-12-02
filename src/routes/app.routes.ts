@@ -4,7 +4,6 @@ import { RequestMiddleware } from '../middlewares/request.middleware';
 import { UserController } from '../controllers/user.controller';
 import { UserHobbyController } from '../controllers/userhobby.cotroller';
 import { HobbyController } from '../controllers/hobby.controller';
-import dotenv from 'dotenv';
 
 export class AppRoutes {
     private livelinessController = new LivelinessController();
@@ -25,8 +24,11 @@ export class AppRoutes {
         app.route('/hobbies/:id').get(this.requestMiddleware.validateRequest, this.hobbyController.getHobbyDetails);
         app.route('/hobbies/:id').put(this.requestMiddleware.validateRequest, this.hobbyController.updateHobby);
 
-        app.route('/cdef').get(this.requestMiddleware.validateRequest, this.userHobbyController.getUsersWithHobby);
-        app.route('/users/hobby').post(
+        app.route('/userhobbies').get(
+            this.requestMiddleware.validateRequest,
+            this.userHobbyController.getUsersWithHobby,
+        );
+        app.route('/userhobbies').post(
             this.requestMiddleware.validateRequest,
             this.userHobbyController.createUserWithHobby,
         );
