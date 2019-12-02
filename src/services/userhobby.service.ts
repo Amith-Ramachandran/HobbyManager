@@ -3,9 +3,10 @@ import logger from '../utilities/logger';
 import { Hobby, HobbyModel } from '../db/models/hobby';
 
 export class UserHobbyService {
-    public async getUsersWithHobby(): Promise<any | undefined> {
+    //Get all users withcorresponding hobbies
+    public async getUsersWithHobby(): Promise<Array<UserModel> | undefined> {
         try {
-            const userHobbies: Array<any> = await User.find({})
+            const userHobbies: Array<UserModel> = await User.find({})
                 .populate('hobby')
                 .exec();
             return userHobbies;
@@ -14,13 +15,14 @@ export class UserHobbyService {
         }
     }
 
+    // Create user with hobby details
     public async createUserWithHobby(requestData: UserModel): Promise<UserModel | undefined> {
         try {
             const userInfo: object = { name: requestData.name };
             const hobbyInfo: object = requestData.hobby;
 
-            const user: any = new User(userInfo);
-            const hobbyData: any = new Hobby(hobbyInfo);
+            const user: UserModel = new User(userInfo);
+            const hobbyData: HobbyModel = new Hobby(hobbyInfo);
 
             const newHobby: HobbyModel = await hobbyData.save();
             user.hobby.push(newHobby._id);
@@ -31,13 +33,13 @@ export class UserHobbyService {
         }
     }
 
-    public async deleteUser(userID: string): Promise<UserModel | undefined> {
+    //Delete a user and user's hobbies
+    public async deleteUser(userID: string): Promise<object | undefined> {
         try {
-            const user: any | null = await User.findOne({ _id: userID });
+            const user: UserModel | null = await User.findOne({ _id: userID });
             if (user) {
-                const result: any = await Hobby.deleteMany({ _id: { $in: user.hobby } });
-                const response: any = await User.deleteOne({ _id: userID });
-                console.log(response);
+                await Hobby.deleteMany({ _id: { $in: user.hobby } });
+                const response: object = await User.deleteOne({ _id: userID });
                 return response;
             } else {
                 return;
@@ -47,14 +49,15 @@ export class UserHobbyService {
         }
     }
 
+    // Create a hobby for existing user.
     public async createHobby(userID: string, hobbyDetails: HobbyModel): Promise<HobbyModel | undefined> {
         try {
-            const user: any | null = await User.findOne({ _id: userID });
+            const user: UserModel | null = await User.findOne({ _id: userID });
             if (user) {
-                const hobbyData: any = new Hobby(hobbyDetails);
+                const hobbyData: HobbyModel = new Hobby(hobbyDetails);
                 const newHobby: HobbyModel = await hobbyData.save();
                 user.hobby.push(newHobby._id);
-                const newUser: UserModel = await User.updateOne(
+                await User.updateOne(
                     { _id: userID },
                     {
                         hobby: user.hobby,
@@ -69,24 +72,23 @@ export class UserHobbyService {
         }
     }
 
+    // Delete a hobby from user and hobby collection.
     public async deleteHobby(userID: string, hobbyID: string): Promise<object | undefined> {
         try {
-            const user: any | null = await User.findOne({ _id: userID });
-            const hobby: any | null = await Hobby.findOne({ _id: hobbyID });
+            const user: UserModel | null = await User.findOne({ _id: userID });
+            const hobby: HobbyModel | null = await Hobby.findOne({ _id: hobbyID });
             if (user && hobby) {
                 const index: number = user.hobby.indexOf(hobby._id);
                 if (index > -1) {
                     user.hobby.splice(index, 1);
                 }
-                console.log(index, user.hobby);
-                const newUser: any = await User.updateOne(
+                await User.updateOne(
                     { _id: userID },
                     {
                         hobby: user.hobby,
                     },
                 );
-                const result: any = await Hobby.deleteOne({ _id: hobbyID });
-                console.log(result);
+                const result: object = await Hobby.deleteOne({ _id: hobbyID });
                 return result;
             } else {
                 return;

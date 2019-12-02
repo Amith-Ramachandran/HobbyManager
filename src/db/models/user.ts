@@ -1,8 +1,7 @@
 import mongoose from 'mongoose';
-import { HobbyModel } from './hobby';
 
 const UserSchema = new mongoose.Schema({
-    name: String,
+    name: { type: String, unique: true },
     hobby: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Hobby' }],
 });
 

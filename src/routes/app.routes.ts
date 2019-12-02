@@ -12,8 +12,9 @@ export class AppRoutes {
     private userHobbyController = new UserHobbyController();
     private hobbyController = new HobbyController();
 
+    //All routes in the application are defined here.
     public routes(app: Application): void {
-        app.route('/liveliness').get(this.requestMiddleware.validateRequest, this.livelinessController.getLiveliness);
+        app.route('/health').get(this.livelinessController.getLiveliness);
 
         app.route('/users').get(this.requestMiddleware.validateRequest, this.userController.getAllUsers);
         app.route('/users/:id').get(this.requestMiddleware.validateRequest, this.userController.getUserDetails);

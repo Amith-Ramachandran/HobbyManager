@@ -2,6 +2,7 @@ import { User, UserModel } from '../db/models/user';
 import logger from '../utilities/logger';
 
 export class UserService {
+    //Get all users in the application
     public async getAllUsers(): Promise<Array<UserModel> | undefined> {
         try {
             const users: Array<UserModel> = await User.find({}, { _id: 0, hobby: 0 });
@@ -12,16 +13,17 @@ export class UserService {
             logger.exception(error);
         }
     }
-
+    // Get one user details
     public async getUserDetails(userID: string): Promise<UserModel | undefined | null> {
         try {
-            const user: UserModel | null = await User.findOne({ _id: userID }, { _id: 0, hobby: 0 });
+            const user: UserModel | null = await User.findOne({ _id: userID }, { hobby: 0 });
             return user;
         } catch (error) {
             logger.exception(error);
         }
     }
 
+    // Create user with basic details
     public async createUser(requestData: UserModel): Promise<UserModel | undefined> {
         try {
             const userInfo: object = { name: requestData.name };
@@ -33,17 +35,19 @@ export class UserService {
         }
     }
 
-    public async updateUser(userID: string, requestData: UserModel): Promise<UserModel | undefined> {
+    // Update basic user details
+    public async updateUser(userID: string, requestData: UserModel): Promise<UserModel | undefined | null> {
         try {
             const user: UserModel | null = await User.findOne({ _id: userID });
             if (user) {
-                const newUser: UserModel = await User.update(
+                await User.update(
                     { _id: userID },
                     {
                         name: requestData.name,
                     },
                 );
-                return newUser;
+                const updatedUser: UserModel | null = await User.findOne({ _id: userID });
+                return updatedUser;
             } else {
                 return;
             }

@@ -1,0 +1,500 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Hobby Manager API",
+        "description": "Hobby manager application to manage users to hobbies",
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
+    },
+    "host": "localhost:8002",
+    "basePath": "",
+    "tags": [{
+        "name": "Healthcheck",
+        "description": "APIs for checking the system livliness"
+    }, {
+        "name": "Users",
+        "description": "APIs for users in the system"
+    }, {
+        "name": "Hobby",
+        "description": "APIs for hobbies in the system"
+    }, {
+        "name": "UserHobby",
+        "description": "APIs for managing both users and hobbies in the system"
+    }],
+    "schemes": [
+        "http"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/health": {
+            "get": {
+                "tags": [
+                    "Healthcheck"
+                ],
+                "summary": "Get system health status",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "examples": {
+                            "message": "Server is Healthy..."
+                        }
+                    }
+                }
+            }
+        },
+        "/users": {
+            "post": {
+                "summary": "Create a user(without hobby)",
+                "tags": [
+                    "Users"
+                ],
+                "description": "Create new user in system",
+                "parameters": [{
+                    "name": "name",
+                    "in": "body",
+                    "description": "Username of the user we want to create",
+                    "schema": {
+                        "example": {
+                            "name": ""
+                        }
+                    }
+                }, {
+                    "name": "jwttoken",
+                    "in": "header",
+                    "type": "string",
+                    "required": true
+                }],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "New user is created",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get All users in the system",
+                "tags": [
+                    "Users"
+                ],
+                "parameters": [{
+                    "name": "jwttoken",
+                    "in": "header",
+                    "type": "string",
+                    "required": true
+                }],
+                "description": "Get all users in system",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "$ref": "#/definitions/UserDetails"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "parameters": [{
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "description": "user id of the user we want to find",
+                "type": "string"
+            }, {
+                "name": "jwttoken",
+                "in": "header",
+                "type": "string",
+                "required": true
+            }],
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get user details with given ID",
+                "responses": {
+                    "200": {
+                        "description": "User is found",
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update user with give ID",
+                "tags": [
+                    "Users"
+                ],
+                "parameters": [{
+                    "name": "name",
+                    "in": "body",
+                    "description": "Username of the user we want to create",
+                    "schema": {
+                        "example": {
+                            "name": ""
+                        }
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "User is updated",
+                        "schema": {
+                            "type": "object",
+                            "example": {
+                                "message": "Document updated successfully",
+                                "data": {
+                                    "hobby": [
+                                        "5de5123aab36d13211956f47"
+                                    ],
+                                    "name": "Amith",
+                                    "id": "5de5123aab36d13211956f46"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete user and hobbies",
+                "tags": [
+                    "UserHobby"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User is deleted",
+                        "schema": {
+                            "example": {
+                                "message": "Document deleted sucessfully"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/hobbies": {
+            "get": {
+                "summary": "Get all hobbies in the system",
+                "tags": [
+                    "Hobby"
+                ],
+                "parameters": [{
+                    "name": "jwttoken",
+                    "in": "header",
+                    "type": "string",
+                    "required": true
+                }],
+                "description": "Get all hobbies in system",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Hobbies"
+                        }
+                    }
+                }
+            }
+        },
+        "/hobbies/{id}": {
+            "parameters": [{
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "description": "id of the hobby we want to find",
+                "type": "string"
+            }, {
+                "name": "jwttoken",
+                "in": "header",
+                "type": "string",
+                "required": true
+            }],
+            "get": {
+                "tags": [
+                    "Hobby"
+                ],
+                "summary": "Get hobby details with given ID",
+                "responses": {
+                    "200": {
+                        "description": "Hobby is found",
+                        "schema": {
+                            "$ref": "#/definitions/Hobby"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update hobby deails",
+                "tags": [
+                    "Hobby"
+                ],
+                "parameters": [{
+                    "name": "hobby details",
+                    "in": "body",
+                    "schema": {
+                        "example": {
+                            "currentLevel": "",
+                            "name": "",
+                            "year": ""
+                        }
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Hobby is updated",
+                        "schema": {
+                            "type": "object",
+                            "example": {
+                                "message": "Document updated successfully",
+                                "data": {
+                                    "passionLevel": "High",
+                                    "name": "Playing hockey",
+                                    "year": 1997,
+                                    "id": "5de4b669cbc39061f94df223"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/userhobbies": {
+            "parameters": [{
+                "name": "jwttoken",
+                "in": "header",
+                "type": "string",
+                "required": true
+            }],
+            "get": {
+                "tags": [
+                    "UserHobby"
+                ],
+                "summary": "Get list of all users and corresponding hobbies",
+                "responses": {
+                    "200": {
+                        "description": "Users and hobbies is found",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create user with hobby details",
+                "tags": [
+                    "UserHobby"
+                ],
+                "parameters": [{
+                    "name": "user and hobby details",
+                    "in": "body",
+                    "schema": {
+                        "example": {
+                            "name": "",
+                            "hobby": {
+                                "passionLevel": "High",
+                                "name": "Playing bb",
+                                "year": 1999
+                            }
+                        }
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "User and Hobby are updated",
+                        "schema": {
+                            "type": "object",
+                            "example": {
+                                "message": {
+                                    "hobby": [
+                                        "5de556d6cfb4d557ad803f93"
+                                    ],
+                                    "name": "name",
+                                    "id": "5de556d6cfb4d557ad803f92"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/:userID/hobbies": {
+            "parameters": [{
+                "name": "userID",
+                "in": "path",
+                "required": true,
+                "description": "user id",
+                "type": "string"
+            }, {
+                "name": "jwttoken",
+                "in": "header",
+                "type": "string",
+                "required": true
+            }],
+            "post": {
+                "summary": "Create hobby for the existing user",
+                "tags": [
+                    "UserHobby"
+                ],
+                "parameters": [{
+                    "name": "user and hobby details",
+                    "in": "body",
+                    "schema": {
+                        "example": {
+                            "passionLevel": "High",
+                            "name": "Playing hockey",
+                            "year": 2019
+                        }
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Hobby created for existing user",
+                        "schema": {
+                            "type": "object",
+                            "example": {
+                                "data": {
+                                    "passionLevel": "High",
+                                    "name": "Playing hockey",
+                                    "year": 2019,
+                                    "id": "5de51828f0f7c85bf8b71fed"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/:userID/hobbies/:hobbyID": {
+            "parameters": [{
+                "name": "userID",
+                "in": "path",
+                "required": true,
+                "description": "user id",
+                "type": "string"
+            }, {
+                "name": "hobbyID",
+                "in": "path",
+                "required": true,
+                "description": "hobby id",
+                "type": "string"
+            }, {
+                "name": "jwttoken",
+                "in": "header",
+                "type": "string",
+                "required": true
+            }],
+            "delete": {
+                "summary": "delete a hobby for a user",
+                "tags": [
+                    "UserHobby"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Hobby deleted for a user",
+                        "schema": {
+                            "type": "object",
+                            "example": {
+                                "message": "Document deleted sucessfully"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "User": {
+            "required": [
+                "name",
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "uniqueItems": true
+                },
+                "name": {
+                    "type": "string",
+                    "uniqueItems": true
+                },
+                "hobby": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "$ref": "#/definitions/Hobby"
+                    }
+                }
+            }
+        },
+        "Users": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "$ref": "#/definitions/User"
+            }
+        },
+        "UserDetails": {
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "uniqueItems": true
+                },
+                "name": {
+                    "type": "string",
+                    "uniqueItems": true
+                }
+            }
+        },
+        "UsersDetails": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "$ref": "#/definitions/UserDetails"
+            }
+        },
+        "Hobby": {
+            "required": [
+                "name",
+                "currentLevel",
+                "years"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "uniqueItems": true
+                },
+                "name": {
+                    "type": "string"
+                },
+                "currentlevel": {
+                    "type": "string"
+                },
+                "year": {
+                    "type": "number"
+                }
+            }
+        },
+        "Hobbies": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "$ref": "#/definitions/Hobby"
+            }
+        }
+    }
+}

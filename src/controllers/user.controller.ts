@@ -2,10 +2,11 @@ import { Request, Response } from 'express';
 import { UserService } from '../services/user.service';
 import constants from '../constants/constants';
 import logger from '../utilities/logger';
+import { UserModel } from '../db/models/user';
 
 export class UserController {
     private userService: UserService = new UserService();
-
+    // Get all users in the system
     public getAllUsers = async (req: Request, res: Response): Promise<void> => {
         try {
             const users = await this.userService.getAllUsers();
@@ -16,6 +17,7 @@ export class UserController {
         }
     };
 
+    // Get a user details
     public getUserDetails = async (req: Request, res: Response): Promise<void> => {
         try {
             const user = await this.userService.getUserDetails(req.params.id);
@@ -26,6 +28,7 @@ export class UserController {
         }
     };
 
+    // Create a user with basic details
     public createUser = async (req: Request, res: Response): Promise<void> => {
         try {
             const user = await this.userService.createUser(req.body);
@@ -36,11 +39,12 @@ export class UserController {
         }
     };
 
+    // Update a user details
     public updateUser = async (req: Request, res: Response): Promise<void> => {
         try {
-            const user: any = await this.userService.updateUser(req.params.id, req.body);
-            if (user && user.n) {
-                res.status(200).send({ message: constants.succesfullUpdation });
+            const user: UserModel | undefined | null = await this.userService.updateUser(req.params.id, req.body);
+            if (user) {
+                res.status(200).send({ message: constants.succesfullUpdation, data: user });
             } else {
                 res.status(200).send({ message: constants.failedUpdation });
             }

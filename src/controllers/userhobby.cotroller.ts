@@ -2,13 +2,15 @@ import { Request, Response } from 'express';
 import { UserHobbyService } from '../services/userhobby.service';
 import constants from '../constants/constants';
 import logger from '../utilities/logger';
+import { UserModel } from '../db/models/user';
+import { HobbyModel } from '../db/models/hobby';
 
 export class UserHobbyController {
     private userHobbyService: UserHobbyService = new UserHobbyService();
 
     public getUsersWithHobby = async (req: Request, res: Response): Promise<void> => {
         try {
-            const userHobbies: any = await this.userHobbyService.getUsersWithHobby();
+            const userHobbies: Array<UserModel> | undefined = await this.userHobbyService.getUsersWithHobby();
             res.status(200).send({ message: userHobbies });
         } catch (error) {
             logger.exception(error);
@@ -28,8 +30,8 @@ export class UserHobbyController {
 
     public deleteUserWithHobby = async (req: Request, res: Response): Promise<void> => {
         try {
-            const user: any = await this.userHobbyService.deleteUser(req.params.id);
-            if (user && user.n) {
+            const user: object | undefined = await this.userHobbyService.deleteUser(req.params.id);
+            if (user) {
                 res.status(200).send({ message: constants.succesfullDeletion });
             } else {
                 res.status(200).send({ message: constants.failedDeletion });
@@ -42,7 +44,7 @@ export class UserHobbyController {
 
     public createHobby = async (req: Request, res: Response): Promise<void> => {
         try {
-            const result: any = await this.userHobbyService.createHobby(req.params.userID, req.body);
+            const result: HobbyModel | undefined = await this.userHobbyService.createHobby(req.params.userID, req.body);
             res.status(200).send({ data: result });
         } catch (error) {
             logger.exception(error);
@@ -52,8 +54,11 @@ export class UserHobbyController {
 
     public deleteHobby = async (req: Request, res: Response): Promise<void> => {
         try {
-            const result: any = await this.userHobbyService.deleteHobby(req.params.userID, req.params.hobbyID);
-            if (result && result.n) {
+            const result: object | undefined = await this.userHobbyService.deleteHobby(
+                req.params.userID,
+                req.params.hobbyID,
+            );
+            if (result) {
                 res.status(200).send({ message: constants.succesfullDeletion });
             } else {
                 res.status(200).send({ message: constants.failedDeletion });

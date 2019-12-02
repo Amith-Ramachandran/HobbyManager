@@ -10,6 +10,7 @@ const appRouts = new AppRoutes();
 
 appRouts.routes(app);
 
+//Application starts here
 app.listen(port, () => {
     logger.info(`${constants.serverStarted}${port}`);
 });

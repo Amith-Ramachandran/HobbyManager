@@ -20,8 +20,7 @@ export default class ConnectionManger {
             });
             logger.info(constants.succesfullDBConnection);
         } catch (error) {
-            console.error(constants.failedDBConnection);
-            console.exception(error);
+            logger.exception(error);
         }
     }
 

@@ -2,9 +2,11 @@ import express, { Application } from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import ConnectionManger from './db/ConnectionManager';
+import swaggerUi from 'swagger-ui-express';
 
 class App {
     public app: Application;
+    swaggerDocument = require('../swagger.json');
 
     constructor() {
         this.app = express();
@@ -22,6 +24,7 @@ class App {
             res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
             next();
         });
+        this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(this.swaggerDocument));
     }
 
     private __connectDB(): void {
