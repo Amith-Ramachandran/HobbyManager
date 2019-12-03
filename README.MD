@@ -14,7 +14,7 @@ A NodeJS API that creates and maintains users to hobby management.
 1. Install dependencies
    npm install
 2. Install the following plugins in Visual Studio Code for development. a. ESLint b. Prettier - code formatter
-3. Update .env file to configure the application to work as expected with a project in Github.
+3. Update .env file in the root folder to configure the application to work as expected with a project in Github.
 4. Install MongoDB locally.
 
 | Environment Variable | Description              |
