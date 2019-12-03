@@ -3,7 +3,6 @@
 [Introduction](#introduction)
 [Pre Requisites for the service](#pre-requisites)
 [Using the service for Development](#using-the-service-for-development)
-[Using the service with Docker](#using-the-service-with-docker)
 [Exposed API's](#exposed-apis)
 
 # Introduction
